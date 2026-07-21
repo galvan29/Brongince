@@ -40,10 +40,25 @@
     tg.expand(); // apre a schermo intero
 
     let count = 0;
+    const counterEl = document.getElementById('counter');
+
+    // Carica il valore salvato all'avvio
+    tg.CloudStorage.getItem('click_count', (err, value) => {
+      if (!err && value) {
+        count = parseInt(value, 10) || 0;
+        counterEl.innerText = "Click: " + count;
+      }
+    });
+
     document.getElementById('myButton').addEventListener('click', () => {
       count++;
-      document.getElementById('counter').innerText = "Click: " + count;
+      counterEl.innerText = "Click: " + count;
       tg.HapticFeedback.impactOccurred('light'); // vibrazione leggera
+
+      // Salva il nuovo valore
+      tg.CloudStorage.setItem('click_count', String(count), (err, success) => {
+        if (err) console.error('Errore salvataggio:', err);
+      });
     });
   </script>
 </body>
